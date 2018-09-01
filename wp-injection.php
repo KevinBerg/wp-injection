@@ -4,8 +4,8 @@
  */
 /*
 Plugin Name: WP-injection
-Plugin URI: Todo
-Description: Gives the opportunity to inject html code inside the body or header of a specific page.
+Plugin URI: https://github.com/KevinBerg/wp-injection
+Description: Gives the opportunity to inject content to the <head> area or before the closing </body> tag of a specific page.
 Version: 1.0
 Author: KevinBerg
 Author URI: https://www.kevinberg.de
@@ -24,8 +24,8 @@ class WPInjection {
 
         add_action( 'add_meta_boxes', array( $this, 'addMetaBox' ));
         add_action( 'save_post', array( $this, 'saveMeta' ));
-        add_action('wp_head', array( $this, 'injectHead' ));
-        add_action('wp_footer', array( $this, 'injectFooter' ));
+        add_action( 'wp_head', array( $this, 'injectHead' ));
+        add_action( 'wp_footer', array( $this, 'injectFooter' ));
 
     }
 
@@ -69,7 +69,7 @@ class WPInjection {
     function saveMeta( $post_id ) {
 
         // verify nonce
-        if ( !wp_verify_nonce( $_POST['meta_box_nonce'], basename(__FILE__) ) ) {
+        if ( !wp_verify_nonce( $_POST['meta_box_nonce'], basename( __FILE__ ))) {
             return $post_id;
         }
         // check autosave
@@ -80,13 +80,13 @@ class WPInjection {
         if ( 'page' === $_POST['post_type'] ) {
             if ( !current_user_can( 'edit_page', $post_id ) ) {
                 return $post_id;
-            } elseif ( !current_user_can( 'edit_post', $post_id ) ) {
+            } elseif ( !current_user_can( 'edit_post', $post_id )) {
                 return $post_id;
             }
         }
 
         $old = get_post_meta( $post_id, 'wpinjection_fields', true );
-        $new = $_POST['wpinjection_fields'];
+        $new = $_POST[ 'wpinjection_fields' ];
 
         if ( $new && $new !== $old ) {
             update_post_meta( $post_id, 'wpinjection_fields', $new );
